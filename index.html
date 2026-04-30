@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chick-fil-A | Eat Mor Chikin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E4002B;
+            --primary-dark: #C0001F;
+            --secondary: #FFFFFF;
+            --accent: #F5F0E8;
+            --text: #1A1A1A;
+            --text-light: #4B5563;
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.06);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--accent);
+            color: var(--text);
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* Utils */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--secondary);
+            box-shadow: 0 4px 15px rgba(228, 0, 43, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(228, 0, 43, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(228, 0, 43, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .section-padding {
+            padding: 120px 0;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--primary);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-style: italic;
+            letter-spacing: -0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-links .btn-primary {
+            background-color: white;
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 80px 60px;
+            box-shadow: var(--shadow);
+            width: 100%;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 0.9;
+            font-weight: 900;
+            margin-bottom: 24px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 500px;
+            font-weight: 500;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+        }
+
+        .hero-illustration {
+            width: 100%;
+            max-width: 450px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-12deg); }
+            50% { transform: translateY(-20px) rotate(-8deg); }
+        }
+
+        /* Menu Highlights */
+        .menu-highlights {
+            background-color: var(--accent);
+        }
+
+        .section-header {
+            text-align: left;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--primary);
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .menu-card {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow);
+        }
+
+        .menu-card h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .menu-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .menu-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid var(--accent);
+            padding-top: 20px;
+        }
+
+        .price {
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Why Chick-fil-A */
+        .why-cfa {
+            background-color: white;
+            border-radius: var(--radius-xl);
+            margin: 0 32px;
+            padding: 100px 32px;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+        }
+
+        .why-item {
+            border-left: 4px solid var(--primary);
+            padding-left: 24px;
+        }
+
+        .why-item h3 {
+            font-size: 1.25rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        /* Catering */
+        .catering {
+            background-color: var(--primary);
+            color: var(--secondary);
+            text-align: left;
+            margin-top: 80px;
+        }
+
+        .catering-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .catering h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            max-width: 600px;
+        }
+
+        .catering p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 500px;
+            font-weight: 600;
+        }
+
+        .btn-white {
+            background-color: var(--secondary);
+            color: var(--primary);
+            padding: 20px 40px;
+            font-size: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .testimonial-card {
+            background: var(--secondary);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .testimonial-author {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        /* App Section */
+        .app-section {
+            background-color: white;
+            border-radius: var(--radius-xl);
+            margin: 80px 32px;
+            padding: 100px 32px;
+        }
+
+        .phone-mockup {
+            transform: rotate(5deg);
+        }
+
+        .app-content h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 0.9;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        /* Location Finder */
+        .location-section {
+            background-color: var(--accent);
+        }
+
+        .finder-box {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin-bottom: 60px;
+        }
+
+        .finder-box input {
+            background: var(--accent);
+            border: none;
+            padding: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .loc-card {
+            background: white;
+            border: none;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .loc-card h4 {
+            text-transform: uppercase;
+            font-weight: 900;
+            font-size: 1.25rem;
+            letter-spacing: -0.01em;
+        }
+
+        /* Footer */
+        footer {
+            background-color: white;
+            color: var(--text);
+            padding: 80px 0 40px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-logo {
+            font-weight: 950;
+            font-style: italic;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: -0.06em;
+            font-size: 2.5rem;
+        }
+
+        .footer-tagline {
+            font-weight: 900;
+            text-transform: uppercase;
+            background: var(--text);
+            color: white;
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        .footer-col h4 {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: #999;
+            margin-bottom: 24px;
+        }
+
+        .footer-col a {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        .footer-col a:hover { opacity: 1; }
+
+        .copyright {
+            color: #999;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Mobile Menu */
+        .mobile-nav {
+            background-color: var(--primary);
+            padding: 60px 40px;
+        }
+        .mobile-nav a {
+            color: white;
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container { padding: 40px; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; line-height: 1.1; }
+            .catering h2, .app-content h2 { font-size: 2.5rem; }
+            .hero-grid, .app-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-ctas, .app-btns { justify-content: center; }
+            .hero-container { border-radius: 0; padding: 40px 20px; }
+            .hero { height: auto; padding: 120px 0 40px; }
+            .why-cfa, .app-section { margin: 40px 16px; border-radius: var(--radius-lg); }
+        }
+
+        .finder-box .btn-primary {
+            background-color: var(--text);
+            box-shadow: none;
+        }
+        .finder-box .btn-primary:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <nav id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <svg width="32" height="32" viewBox="0 0 491 512" fill="currentColor"><path d="M491.1 190.1c-16.1-32.9-46.1-55.8-82.6-67.4-15.1-4.8-29.2-8.3-43.1-10.7-13.2-46.7-52.6-86.4-105.9-97.7-111-23.7-175.7 65.1-177.3 67.4-6.3 8.3-4.8 20.3 3.5 26.6 8.3 6.3 20.3 4.8 26.6-3.5 0.5-0.7 49-65.7 127.1-49 42.1 9 73.1 43.1 83.1 82.5-47.7 2.1-99.3 11-144.1 35.1-39.7 21.4-67.4 55.4-80.4 95.1-12.7 39-11 76.5 4.8 110.8 13.9 30.1 36.8 54.4 66.5 70.4 22.4 12.1 46.1 18.2 70.4 18.2 38.6 0 76.5-15.1 106.6-42.1 4-3.6 5.8-9.1 4.8-14.4-1.1-5.3-4.8-9.7-9.8-11.4l-110.8-37.5c-4.8-1.6-10-1.1-14.4 1.5-4.4 2.6-7.3 7-8.1 12.1-1.6 11-4.8 21.4-9.7 31.3-10.7 21.7-28.7 38.6-50.6 47.7-12.1 5.1-25.1 7.6-38.6 7.6-18.7 0-36.8-4.8-52.6-13.9-20.3-11.7-34.9-30.1-42.1-51.9-8.3-24.1-9.5-48.4-3.5-72.4C106.4 250.2 144.1 230.1 190.1 230.1c42.1 0 85.1 16.1 121.1 46.1 4.1 3.4 10.2 3.4 14.4 0 4.1-3.4 5.3-9.5 2.5-14.4-4.8-8.3-10.7-16.1-17.3-23.1 51.9-30.1 113.8-42.1 174.4-23.1 2.2 0.7 4.5 1.1 6.7 1.1 7.4 0 14.1-4.2 17.5-11.1 4.5-9.3 0.8-20.7-8.5-25.5z"/></svg>
+                Chick-fil-A
+            </a>
+            <div class="nav-links">
+                <a href="#menu">Menu</a>
+                <a href="#about">Our Values</a>
+                <a href="#catering">Catering</a>
+                <a href="#app">Rewards</a>
+                <a href="#locations">Locations</a>
+                <a href="#" class="btn btn-primary">Order Now</a>
+            </div>
+            <button class="hamburger" id="menuBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <button class="close-menu" id="closeBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <a href="#menu">Menu</a>
+        <a href="#about">Our Values</a>
+        <a href="#catering">Catering</a>
+        <a href="#app">Rewards</a>
+        <a href="#locations">Locations</a>
+        <a href="#" class="btn btn-primary">Order Now</a>
+    </div>
+
+    <section class="hero">
+        <div class="container hero-container reveal">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>Craveable Chicken. Every Single Day.</h1>
+                    <p>Hot. Fresh. Made with care — because you deserve better food and faster service.</p>
+                    <div class="hero-ctas">
+                        <a href="#menu" class="btn btn-primary">Order Now</a>
+                        <a href="#locations" class="btn btn-secondary">Find a Location</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <svg class="hero-illustration" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="0%" style="stop-color:white;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#F5F0E8;stop-opacity:1" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="200" cy="200" r="180" fill="url(#grad)" />
+                        <!-- Visual representation of sandwich -->
+                        <rect x="100" y="240" width="200" height="40" rx="20" fill="#E4002B" /> <!-- Bottom Bun -->
+                        <rect x="110" y="200" width="180" height="50" rx="10" fill="#5D4037" /> <!-- Patty -->
+                        <rect x="120" y="190" width="160" height="15" rx="5" fill="#4CAF50" opacity="0.8" /> <!-- Pickles -->
+                        <rect x="100" y="140" width="200" height="60" rx="30" fill="#E4002B" /> <!-- Top Bun -->
+                        <circle cx="150" cy="160" r="3" fill="white" opacity="0.6" />
+                        <circle cx="180" cy="155" r="3" fill="white" opacity="0.6" />
+                        <circle cx="220" cy="160" r="3" fill="white" opacity="0.6" />
+                        <circle cx="250" cy="170" r="3" fill="white" opacity="0.6" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="menu-highlights section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Our Fan Favorites</h2>
+                <p>Simple ingredients, legendary taste. What are you craving today?</p>
+            </div>
+            <div class="menu-grid">
+                <div class="menu-card reveal">
+                    <div style="background: var(--accent); border-radius: 8px; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 20px;">🍔</div>
+                    <h3>Classic Chicken Sandwich</h3>
+                    <p>A boneless breast of chicken seasoned to perfection, hand-breaded, and served on a toasted bun with dill pickle chips.</p>
+                    <div class="menu-footer">
+                        <span class="price">$4.95</span>
+                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">Add to Order</button>
+                    </div>
+                </div>
+                <div class="menu-card reveal">
+                    <div style="background: var(--accent); border-radius: 8px; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 20px;">🔥</div>
+                    <h3>Spicy Deluxe Sandwich</h3>
+                    <p>Breaded with a spicy blend of peppers, served with Pepper Jack cheese, lettuce, and tomato for an extra kick.</p>
+                    <div class="menu-footer">
+                        <span class="price">$5.85</span>
+                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">Add to Order</button>
+                    </div>
+                </div>
+                <div class="menu-card reveal">
+                    <div style="background: var(--accent); border-radius: 8px; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 20px;">🍗</div>
+                    <h3>Chick-fil-A® Nuggets</h3>
+                    <p>Bite-sized pieces of tender chicken breast, seasoned and cooked in 100% refined peanut oil. Available in 8 or 12 count.</p>
+                    <div class="menu-footer">
+                        <span class="price">$5.25</span>
+                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">Add to Order</button>
+                    </div>
+                </div>
+                <div class="menu-card reveal">
+                    <div style="background: var(--accent); border-radius: 8px; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin-bottom: 20px;">🥤</div>
+                    <h3>Waffle Fries + Lemonade</h3>
+                    <p>The perfect combo. Our signature waffle-cut potatoes paired with fresh-squeezed Chick-fil-A Lemonade.</p>
+                    <div class="menu-footer">
+                        <span class="price">$6.50</span>
+                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">Add to Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="why-cfa section-padding">
+        <div class="container reveal">
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="icon-box">☀️</div>
+                    <h3>Closed Sundays — because rest matters</h3>
+                    <p>Our founder believed that every employee should have one day to rest and spend time with their family. Since 1946, we've stayed true to that promise.</p>
+                </div>
+                <div class="why-item">
+                    <div class="icon-box">⭐</div>
+                    <h3>#1 in Satisfaction 7 years running</h3>
+                    <p>We're honored to be America's favorite restaurant, driven by our commitment to great food and genuine, heartfelt service.</p>
+                </div>
+                <div class="why-item">
+                    <div class="icon-box">🍗</div>
+                    <h3>Fresh ingredients. Never frozen chicken.</h3>
+                    <p>We source only the highest quality ingredients. Our chicken is 100% whole breast meat, never ground or separated, with no added fillers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="catering" class="catering section-padding">
+        <div class="container reveal">
+            <div class="catering-content">
+                <div>
+                    <h2>Feeding a crowd? We've got you.</h2>
+                    <p>From office lunches to graduation parties, we make hosting easy with pick-up or delivery options for any event size.</p>
+                </div>
+                <a href="#" class="btn btn-white">Explore Catering</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>What Our Guests Are Saying</h2>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card reveal">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"Best service I've ever had at a fast-food restaurant. The 'my pleasure' really makes a difference. And don't get me started on the sauce!"</p>
+                    <div class="testimonial-author">
+                        <div style="width:40px; height:40px; border-radius:50%; background:#DDD; display:flex; align-items:center; justify:center;">MT</div>
+                        Marcus T.
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"The nuggets are literally life-changing. Always hot, always fresh. The app also makes it so easy to earn free treats."</p>
+                    <div class="testimonial-author">
+                        <div style="width:40px; height:40px; border-radius:50%; background:#DDD; display:flex; align-items:center; justify:center;">PS</div>
+                        Priya S.
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"Catering for my daughter's birthday was a breeze. Everything arrived on time and the kids loved it. Highly recommend!"</p>
+                    <div class="testimonial-author">
+                        <div style="width:40px; height:40px; border-radius:50%; background:#DDD; display:flex; align-items:center; justify:center;">JK</div>
+                        Jordan K.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="app" class="app-section section-padding">
+        <div class="container app-grid">
+            <div class="reveal">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">🐔</div>
+                        <h3 style="margin-bottom: 10px;">Chick-fil-A One®</h3>
+                        <p style="font-size: 0.8rem; opacity: 0.7;">Your rewards are waiting!</p>
+                        <div style="width: 80%; height: 10px; background: #EEE; border-radius: 5px; margin-top: 20px;">
+                            <div style="width: 65%; height: 100%; background: var(--primary); border-radius: 5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-content reveal">
+                <h2>Order faster. Earn points. Skip the line.</h2>
+                <p>Download the Chick-fil-A One® app and start earning points every time you eat. Redeem them for your favorite treats and enjoy special surprises.</p>
+                <div class="app-btns">
+                    <a href="#" class="btn btn-primary">Download on iOS</a>
+                    <a href="#" class="btn btn-primary">Get it on Android</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="locations" class="location-section section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Find Your Nearest Chick-fil-A</h2>
+                <p>Over 2,600 restaurants across the United States. We can't wait to see you!</p>
+            </div>
+            <div class="finder-box reveal">
+                <input type="text" placeholder="Enter zip code or city">
+                <button class="btn btn-primary">Find Location</button>
+            </div>
+            <div class="locations-result">
+                <div class="loc-card reveal">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                        Main Street Plaza
+                    </h4>
+                    <p>123 Chicken Way, Atlanta, GA 30301</p>
+                    <p><strong>Hours:</strong> 6:30 AM - 10:00 PM</p>
+                    <p>Drive-thru & Dine-in available</p>
+                </div>
+                <div class="loc-card reveal">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                        Westview Shopping Center
+                    </h4>
+                    <p>456 Waffle Fry Ave, Austin, TX 78701</p>
+                    <p><strong>Hours:</strong> 6:00 AM - 11:00 PM</p>
+                    <p>Curbside & Delivery available</p>
+                </div>
+                <div class="loc-card reveal">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+                        Capitol Hill Market
+                    </h4>
+                    <p>789 Lemonade Ln, Washington, DC 20001</p>
+                    <p><strong>Hours:</strong> 7:00 AM - 10:00 PM</p>
+                    <p>Express Carry-out only</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo">Chick-fil-A</div>
+                <p class="footer-tagline">"Eat Mor Chikin"</p>
+                <div class="social-links">
+                    <a href="#"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                    <a href="#"><svg viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                    <a href="#"><svg viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#menu">Full Menu</a></li>
+                    <li><a href="#catering">Catering</a></li>
+                    <li><a href="#">Nutrition & Allergens</a></li>
+                    <li><a href="#">Gift Cards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Stories</a></li>
+                    <li><a href="#">Newsroom</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                &copy; 2026 Chick-fil-A, Inc. All rights reserved. | 1-866-232-2040
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const navbar = document.getElementById('navbar');
+        const menuBtn = document.getElementById('menuBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const overlay = document.getElementById('overlay');
+        const reveals = document.querySelectorAll('.reveal');
+
+        // Nav Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.padding = '12px 0';
+                navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            } else {
+                navbar.style.padding = '16px 0';
+                navbar.style.backgroundColor = 'var(--secondary)';
+                navbar.style.backdropFilter = 'none';
+            }
+        });
+
+        // Mobile Menu Toggle
+        const toggleMenu = (open) => {
+            mobileNav.classList.toggle('open', open);
+            overlay.style.display = open ? 'block' : 'none';
+            document.body.style.overflow = open ? 'hidden' : 'auto';
+        };
+
+        menuBtn.addEventListener('click', () => toggleMenu(true));
+        closeBtn.addEventListener('click', () => toggleMenu(false));
+        overlay.addEventListener('click', () => toggleMenu(false));
+
+        // Click nav link to close menu
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+        });
+
+        // Scroll Animations (IntersectionObserver)
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(el => revealObserver.observe(el));
+
+        // Smooth Scroll handling for links (optional, some browsers handle it natively via CSS)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Finder simple feedback
+        const finderBtn = document.querySelector('.finder-box .btn');
+        const finderInput = document.querySelector('.finder-box input');
+        const resultsHeader = document.querySelector('.location-section .section-header p');
+        
+        finderBtn.addEventListener('click', () => {
+            if (finderInput.value) {
+                resultsHeader.textContent = 'Showing nearest restaurants for "' + finderInput.value + '"';
+                resultsHeader.style.color = 'var(--primary)';
+                finderInput.value = '';
+            } else {
+                resultsHeader.textContent = 'Please enter a zip code or city to search.';
+                resultsHeader.style.color = 'var(--primary)';
+            }
+        });
+    </script>
+</body>
+</html>
+
